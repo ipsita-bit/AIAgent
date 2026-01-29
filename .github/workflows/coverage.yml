@@ -21,7 +21,7 @@ jobs:
         distribution: 'temurin'
         
     - name: Cache Gradle packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches
@@ -33,9 +33,6 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       
-    - name: Run tests with coverage
-      run: ./gradlew test jacocoTestReport
-      
     - name: Run coverage agent analysis
       run: ./gradlew analyzeCoverage
       
@@ -43,7 +40,7 @@ jobs:
       run: ./gradlew jacocoTestCoverageVerification
       
     - name: Upload coverage reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: coverage-reports
