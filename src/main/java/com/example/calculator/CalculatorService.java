@@ -18,7 +18,7 @@ public class CalculatorService {
     }
 
     public double divide(double a, double b) {
-        if (b == 0) {
+        if (Math.abs(b) < 1e-10) {
             throw new IllegalArgumentException("Cannot divide by zero");
         }
         return a / b;
