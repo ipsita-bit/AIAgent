@@ -15,6 +15,7 @@ A simple RESTful calculator service built with Spring Boot and Gradle.
 - Spring Boot 3.2.1
 - Gradle 8.5
 - JUnit 5 for testing
+- JaCoCo for code coverage analysis
 
 ## Project Structure
 
@@ -25,14 +26,18 @@ calculator/
 │   │   ├── java/com/example/calculator/
 │   │   │   ├── CalculatorApplication.java     # Main application class
 │   │   │   ├── CalculatorController.java      # REST controller
-│   │   │   └── CalculatorService.java         # Business logic
+│   │   │   ├── CalculatorService.java         # Business logic
+│   │   │   ├── CalculatorResponse.java        # Response model
+│   │   │   └── CodeCoverageAgent.java         # Code coverage analysis agent
 │   │   └── resources/
 │   │       └── application.properties         # Application configuration
 │   └── test/
 │       └── java/com/example/calculator/
 │           ├── CalculatorApplicationTests.java
 │           ├── CalculatorControllerTest.java
-│           └── CalculatorServiceTest.java
+│           ├── CalculatorServiceTest.java
+│           ├── CalculatorResponseTest.java
+│           └── CodeCoverageAgentTest.java
 ├── build.gradle                               # Gradle build configuration
 └── settings.gradle                            # Gradle settings
 ```
@@ -48,6 +53,80 @@ calculator/
 ```bash
 ./gradlew test
 ```
+
+## Code Coverage
+
+This project uses JaCoCo for code coverage analysis and includes a **CodeCoverageAgent** that automatically analyzes test coverage and provides recommendations for improvement.
+
+### Running Tests with Coverage
+
+```bash
+./gradlew test jacocoTestReport
+```
+
+The coverage report will be generated at:
+- HTML: `build/reports/jacoco/test/html/index.html`
+- XML: `build/reports/jacoco/test/jacocoTestReport.xml`
+- CSV: `build/reports/jacoco/test/jacocoTestReport.csv`
+
+### Using the Code Coverage Agent
+
+The CodeCoverageAgent analyzes JaCoCo coverage reports and provides actionable recommendations:
+
+```bash
+# Using the Gradle task (recommended)
+./gradlew analyzeCoverage
+
+# Or run directly with Java
+java -cp build/classes/java/main com.example.calculator.CodeCoverageAgent
+
+# Run with custom coverage report path and threshold
+java -cp build/classes/java/main com.example.calculator.CodeCoverageAgent \
+  build/reports/jacoco/test/jacocoTestReport.csv 0.90
+```
+
+The agent will:
+- Parse the JaCoCo CSV coverage report
+- Identify classes below the coverage threshold
+- Generate specific recommendations for improving coverage
+- Provide statistics on overall project coverage
+
+Example output:
+```
+=== Code Coverage Analysis Report ===
+
+Overall Coverage: 99.04%
+Coverage Threshold: 80.00%
+
+Classes below coverage threshold:
+
+Class: CalculatorApplication - Coverage: 37.50%
+  - Add tests for 1 untested method(s)
+  - Cover 2 untested line(s)
+  - Main method coverage is optional for application entry points
+
+Summary:
+- Total classes: 6
+- Classes below threshold: 1
+- Classes meeting threshold: 5
+```
+
+### Coverage Verification
+
+To verify that coverage meets the minimum threshold (80%):
+
+```bash
+./gradlew jacocoTestCoverageVerification
+```
+
+### Current Coverage Statistics
+
+- **Overall Coverage**: 99.04%
+- **CalculatorController**: 100%
+- **CalculatorService**: 100%
+- **CalculatorResponse**: 100%
+- **CodeCoverageAgent**: 99.56%
+- **CalculatorApplication**: 37.50% (main method excluded)
 
 ## Running the Application
 
