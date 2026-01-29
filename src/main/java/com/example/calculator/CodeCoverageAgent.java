@@ -1,7 +1,6 @@
 package com.example.calculator;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -100,18 +99,25 @@ public class CodeCoverageAgent {
     public List<CoverageData> parseCoverageReport(String reportPath) throws IOException {
         List<CoverageData> coverageList = new ArrayList<>();
         
-        try (BufferedReader reader = new BufferedReader(new FileReader(reportPath))) {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(reportPath), java.nio.charset.StandardCharsets.UTF_8)) {
             String line;
             boolean isFirstLine = true;
+            int lineNumber = 0;
             
             while ((line = reader.readLine()) != null) {
+                lineNumber++;
                 if (isFirstLine) {
                     isFirstLine = false;
                     continue; // Skip header
                 }
                 
                 String[] fields = line.split(",");
-                if (fields.length >= 13) {
+                if (fields.length < 13) {
+                    // Skip malformed lines
+                    continue;
+                }
+                
+                try {
                     String className = fields[2];
                     int instructionsMissed = Integer.parseInt(fields[3]);
                     int instructionsCovered = Integer.parseInt(fields[4]);
@@ -122,6 +128,9 @@ public class CodeCoverageAgent {
                     
                     coverageList.add(new CoverageData(className, instructionsMissed, instructionsCovered,
                                                      linesMissed, linesCovered, methodsMissed, methodsCovered));
+                } catch (NumberFormatException e) {
+                    // Skip lines with invalid numeric data
+                    continue;
                 }
             }
         }
@@ -249,7 +258,20 @@ public class CodeCoverageAgent {
      */
     public static void main(String[] args) {
         String reportPath = args.length > 0 ? args[0] : "build/reports/jacoco/test/jacocoTestReport.csv";
-        double threshold = args.length > 1 ? Double.parseDouble(args[1]) : DEFAULT_COVERAGE_THRESHOLD;
+        double threshold;
+        
+        try {
+            threshold = args.length > 1 ? Double.parseDouble(args[1]) : DEFAULT_COVERAGE_THRESHOLD;
+            if (threshold < 0.0 || threshold > 1.0) {
+                System.err.println("Error: Threshold must be between 0.0 and 1.0");
+                System.exit(1);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.err.println("Error: Invalid threshold value. Must be a number between 0.0 and 1.0");
+            System.exit(1);
+            return;
+        }
         
         CodeCoverageAgent agent = new CodeCoverageAgent(threshold);
         String report = agent.analyzeAndReport(reportPath);
