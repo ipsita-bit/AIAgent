@@ -72,4 +72,43 @@ class CalculatorControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("Cannot divide by zero"));
     }
+
+    @Test
+    void testAddWeight() throws Exception {
+        mockMvc.perform(get("/api/calculator/addWeight")
+                .param("kg", "2")
+                .param("grams", "500"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.kilograms").value(2.0))
+                .andExpect(jsonPath("$.grams").value(500.0))
+                .andExpect(jsonPath("$.totalKilograms").value(2.0))
+                .andExpect(jsonPath("$.totalGrams").value(500.0))
+                .andExpect(jsonPath("$.operation").value("weight addition"));
+    }
+
+    @Test
+    void testAddWeightWithOverflow() throws Exception {
+        mockMvc.perform(get("/api/calculator/addWeight")
+                .param("kg", "1")
+                .param("grams", "1500"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.kilograms").value(1.0))
+                .andExpect(jsonPath("$.grams").value(1500.0))
+                .andExpect(jsonPath("$.totalKilograms").value(2.0))
+                .andExpect(jsonPath("$.totalGrams").value(500.0))
+                .andExpect(jsonPath("$.operation").value("weight addition"));
+    }
+
+    @Test
+    void testAddWeightZero() throws Exception {
+        mockMvc.perform(get("/api/calculator/addWeight")
+                .param("kg", "0")
+                .param("grams", "0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.kilograms").value(0.0))
+                .andExpect(jsonPath("$.grams").value(0.0))
+                .andExpect(jsonPath("$.totalKilograms").value(0.0))
+                .andExpect(jsonPath("$.totalGrams").value(0.0))
+                .andExpect(jsonPath("$.operation").value("weight addition"));
+    }
 }

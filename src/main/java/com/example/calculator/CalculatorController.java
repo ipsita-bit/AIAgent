@@ -40,4 +40,10 @@ public class CalculatorController {
             return ResponseEntity.badRequest().body(new CalculatorResponse(a, b, 0, "division", e.getMessage()));
         }
     }
+
+    @GetMapping("/addWeight")
+    public ResponseEntity<WeightResponse> addWeight(@RequestParam double kg, @RequestParam double grams) {
+        CalculatorService.WeightResult result = calculatorService.addWeight(kg, grams);
+        return ResponseEntity.ok(new WeightResponse(kg, grams, result.getKilograms(), result.getGrams(), "weight addition"));
+    }
 }

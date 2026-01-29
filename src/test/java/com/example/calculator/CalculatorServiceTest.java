@@ -49,4 +49,32 @@ class CalculatorServiceTest {
         });
         assertEquals("Cannot divide by zero", exception.getMessage());
     }
+
+    @Test
+    void testAddWeight() {
+        CalculatorService.WeightResult result = calculatorService.addWeight(2.0, 500.0);
+        assertEquals(2.0, result.getKilograms());
+        assertEquals(500.0, result.getGrams());
+    }
+
+    @Test
+    void testAddWeightWithOverflow() {
+        CalculatorService.WeightResult result = calculatorService.addWeight(1.0, 1500.0);
+        assertEquals(2.0, result.getKilograms());
+        assertEquals(500.0, result.getGrams());
+    }
+
+    @Test
+    void testAddWeightZero() {
+        CalculatorService.WeightResult result = calculatorService.addWeight(0.0, 0.0);
+        assertEquals(0.0, result.getKilograms());
+        assertEquals(0.0, result.getGrams());
+    }
+
+    @Test
+    void testAddWeightOnlyGrams() {
+        CalculatorService.WeightResult result = calculatorService.addWeight(0.0, 2500.0);
+        assertEquals(2.0, result.getKilograms());
+        assertEquals(500.0, result.getGrams());
+    }
 }

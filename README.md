@@ -8,6 +8,7 @@ A simple RESTful calculator service built with Spring Boot and Gradle.
 - Subtraction
 - Multiplication
 - Division (with division by zero handling)
+- Weight Addition (converts KG and grams to total weight)
 
 ## Technologies
 
@@ -28,6 +29,7 @@ calculator/
 │   │   │   ├── CalculatorController.java      # REST controller
 │   │   │   ├── CalculatorService.java         # Business logic
 │   │   │   ├── CalculatorResponse.java        # Response model
+│   │   │   ├── WeightResponse.java            # Weight response model
 │   │   │   └── CodeCoverageAgent.java         # Code coverage analysis agent
 │   │   └── resources/
 │   │       └── application.properties         # Application configuration
@@ -37,6 +39,7 @@ calculator/
 │           ├── CalculatorControllerTest.java
 │           ├── CalculatorServiceTest.java
 │           ├── CalculatorResponseTest.java
+│           ├── WeightResponseTest.java
 │           └── CodeCoverageAgentTest.java
 ├── build.gradle                               # Gradle build configuration
 └── settings.gradle                            # Gradle settings
@@ -215,6 +218,38 @@ Response (HTTP 400 Bad Request):
 }
 ```
 
+### Add Weight
+```bash
+GET /api/calculator/addWeight?kg=2&grams=500
+```
+Response:
+```json
+{
+  "kilograms": 2.0,
+  "grams": 500.0,
+  "totalKilograms": 2.0,
+  "totalGrams": 500.0,
+  "operation": "weight addition",
+  "error": null
+}
+```
+
+Example with overflow (grams > 1000):
+```bash
+GET /api/calculator/addWeight?kg=1&grams=1500
+```
+Response:
+```json
+{
+  "kilograms": 1.0,
+  "grams": 1500.0,
+  "totalKilograms": 2.0,
+  "totalGrams": 500.0,
+  "operation": "weight addition",
+  "error": null
+}
+```
+
 ## Example Usage
 
 Using `curl`:
@@ -223,6 +258,7 @@ curl "http://localhost:8080/api/calculator/add?a=5&b=3"
 curl "http://localhost:8080/api/calculator/subtract?a=10&b=4"
 curl "http://localhost:8080/api/calculator/multiply?a=6&b=7"
 curl "http://localhost:8080/api/calculator/divide?a=20&b=4"
+curl "http://localhost:8080/api/calculator/addWeight?kg=2&grams=500"
 ```
 
 Using `wget`:
