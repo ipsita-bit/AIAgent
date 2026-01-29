@@ -48,3 +48,15 @@ jacocoTestCoverageVerification {
         }
     }
 }
+
+task analyzeCoverage(type: JavaExec) {
+    description = 'Analyzes code coverage and provides recommendations'
+    group = 'verification'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.example.calculator.CodeCoverageAgent'
+    args = [
+        'build/reports/jacoco/test/jacocoTestReport.csv',
+        '0.80'
+    ]
+    dependsOn test, jacocoTestReport
+}
