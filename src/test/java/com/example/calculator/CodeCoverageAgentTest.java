@@ -35,7 +35,7 @@ class CodeCoverageAgentTest {
                 "TestClass", 10, 90, 5, 45, 2, 8
         );
 
-        assertEquals("TestClass", data.getClassName());
+        assertEquals("TestClass", data.className());
         assertEquals(10, data.getInstructionsMissed());
         assertEquals(5, data.getLinesMissed());
         assertEquals(2, data.getMethodsMissed());
@@ -79,8 +79,8 @@ class CodeCoverageAgentTest {
         List<CodeCoverageAgent.CoverageData> coverageList = agent.parseCoverageReport(csvFile.toString());
 
         assertEquals(2, coverageList.size());
-        assertEquals("TestClass1", coverageList.get(0).getClassName());
-        assertEquals("TestClass2", coverageList.get(1).getClassName());
+        assertEquals("TestClass1", coverageList.get(0).className());
+        assertEquals("TestClass2", coverageList.get(1).className());
         assertEquals(10, coverageList.get(0).getInstructionsMissed());
         assertEquals(20, coverageList.get(1).getInstructionsMissed());
     }
@@ -109,8 +109,8 @@ class CodeCoverageAgentTest {
 
         // Should have parsed only the valid lines (TestClass1 and TestClass3)
         assertEquals(2, coverageList.size());
-        assertEquals("TestClass1", coverageList.get(0).getClassName());
-        assertEquals("TestClass3", coverageList.get(1).getClassName());
+        assertEquals("TestClass1", coverageList.get(0).className());
+        assertEquals("TestClass3", coverageList.get(1).className());
     }
 
     @Test
@@ -124,7 +124,7 @@ class CodeCoverageAgentTest {
         List<CodeCoverageAgent.CoverageData> lowCoverageClasses = agent.identifyLowCoverageClasses(coverageData);
 
         assertEquals(1, lowCoverageClasses.size());
-        assertEquals("LowCoverageClass", lowCoverageClasses.get(0).getClassName());
+        assertEquals("LowCoverageClass", lowCoverageClasses.get(0).className());
     }
 
     @Test
