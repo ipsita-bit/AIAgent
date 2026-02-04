@@ -150,6 +150,9 @@ public class McpToolService {
      * @return true if the tool exists, false otherwise
      */
     public boolean toolExists(String toolName) {
+        if (toolName == null) {
+            return false;
+        }
         return tools.stream().anyMatch(tool -> tool.getName().equals(toolName));
     }
 }

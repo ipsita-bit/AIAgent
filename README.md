@@ -480,7 +480,7 @@ The MCP server includes comprehensive test coverage:
   - 29 unit tests for tool service
   - 20 integration tests for controller endpoints
   - 4 model serialization tests
-- **100% code coverage** for MCP components
+- **88% code coverage** for MCP components
 
 Run MCP tests:
 ```bash
